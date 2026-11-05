@@ -1,0 +1,19 @@
+# Environment & Secrets
+.env
+.env*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Logs & Runtime
+*.log
+bot.log
+
+# System files
+.DS_Store
+Thumbs.db

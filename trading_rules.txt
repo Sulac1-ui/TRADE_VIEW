@@ -1,0 +1,65 @@
+# TRADING BOT STRICT OPERATIONAL RULES & GUARDRAILS
+# =====================================================================
+# IMPORTANT: This file acts as the Constitution for the Binance bot.
+# The bot validates EVERY rule before executing any action.
+# IF ANY RULE IS VIOLATED:
+#   1. The bot refuses to trade.
+#   2. If in an active position, it triggers EMERGENCY_EXIT if breached.
+#   3. It alerts with ERROR status and waits until conditions match.
+# =====================================================================
+
+[SECURITY_AND_ENVIRONMENT]
+# Allow live real-money trading? (True / False)
+# If False, the bot will NEVER touch real funds, even if API keys are valid.
+ALLOW_REAL_MONEY_TRADING=False
+
+# Permitted pairs only. If symbol is not in this list, bot will refuse to run.
+ALLOWED_PAIRS=BTC/USDT, ETH/USDT, SOL/USDT
+
+# Strictly require withdrawals to be disabled on API keys
+REQUIRE_WITHDRAWAL_DISABLED=True
+
+
+[CAPITAL_PROTECTION]
+# Absolute maximum USDT allocated to a single trade
+MAX_TRADE_AMOUNT_USDT=15.00
+
+# Minimum USDT cash balance that MUST remain in the wallet at all times as emergency reserve
+# (Ensures balance never falls below Binance's $5 minimum threshold)
+MIN_WALLET_RESERVE_USDT=5.00
+
+# Hard Stop-Loss percentage ceiling (e.g. 0.015 = 1.5%)
+# If price drops by this percentage from entry, EXIT IMMEDIATELY.
+MAX_ALLOWED_LOSS_PER_TRADE_PCT=0.015
+
+# Maximum allowable slippage between expected price and executed price (0.002 = 0.2%)
+MAX_SLIPPAGE_PCT=0.002
+
+
+[CIRCUIT_BREAKERS]
+# Maximum daily loss limit in USDT ($1.00 = 5% of a $20 account)
+# If cumulative losses hit this threshold today, HALT all buying for 24 hours.
+MAX_DAILY_LOSS_USDT=1.00
+
+# Maximum consecutive losing trades allowed before halting trading
+MAX_CONSECUTIVE_LOSSES=3
+
+# Maximum total trades allowed per 24-hour window (prevents overtrading & fee bleed)
+MAX_TRADES_PER_DAY=10
+
+
+[MARKET_CONDITIONS]
+# Minimum candle timeframe allowed for live trading (prevents high-fee 1m/3m/5m churn)
+# Allowed: 15m, 1h, 4h
+MIN_TIMEFRAME=15m
+
+# Minimum 14-period ATR volatility as % of price (0.002 = 0.2%)
+# If market is dead flat/consolidating, DO NOT trade.
+MIN_ATR_VOLATILITY_PCT=0.002
+
+# Minimum candle volume vs 20-period volume moving average (0.8 = 80%)
+# Refuses to enter on low-volume ghost spikes
+MIN_VOLUME_RATIO=0.80
+
+# Require price to be above 200 EMA for BUY signals? (Trend filter)
+REQUIRE_MACRO_TREND_FILTER=True
